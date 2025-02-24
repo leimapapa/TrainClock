@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Clock</title>
+    <style>
+        body {
+        	background: radial-gradient(circle, grey, #030);
+        	margin: 0 auto;
+        	height: 100vh;
+        }
+        #trainClockArea {
+        	position: absolute;
+        	top: 50%;
+        	left: 50%;
+        	transform: translate(-50%,-50%);
+        	width: 95%;
+        	max-width: 400px;
+        	height: 95%;
+        	max-height: 400px;
+        }
+        #trainClockArea > #trainClock {
+        	position: absolute;
+        	top: 50%;
+        	left: 50%;
+        	transform: translate(-50%,-50%);
+        	height: 100%;
+        	width: 100%;
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2451471082233132"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <<div id="trainClockArea"></div>
+    <script>
+        function createTrainClock() {
+        	// Get the current time
+        	const now = new Date();
+        	// Seconds passed in the current day
+        	const secondsInDay = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+        	// Seconds passed in the current hour
+        	const secondsInHour = now.getMinutes() * 60 + now.getSeconds();
+        	// Seconds passed in the current minute
+        	const secondsInMinute = now.getSeconds();
+        	
+        	const svg = `<svg id="trainClock" viewBox="0 0 100 100">
+        	<defs>
+        		<path id="trackSec" fill="none" d="M 50 7.5 A 1 1 0 0 1 50 92.5 A 1 1 0 0 1 50 7.5" />
+        		<path id="trackMin" fill="none" d="M 50 20 A 1 1 0 0 1 50 80 A 1 1 0 0 1 50 20" />
+        		<path id="trackHour" fill="none" d="M 50 32.5 A 1 1 0 0 1 50 67.5 A 1 1 0 0 1 50 32.5" />
+        		<filter id="blur" x="-100%" y="-100%" width="300%" height="300%">
+              <feTurbulence type="turbulence" baseFrequency="0.1" numOctaves="9" result="turbulence" seed="69" />
+              <feDisplacementMap in2="turbulence" in="SourceGraphic" scale="5" />
+            </filter>
+        		<filter id="blur1" x="-100%" y="-100%" width="300%" height="300%">
+        			<feGaussianBlur in="SourceGraphic" stdDeviation="1" />
+        		</filter>
+        		<filter id="blur2" x="-100%" y="-100%" width="300%" height="300%">
+        			<feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+        		</filter>
+        		<radialGradient id="grassGrad1" gradientUnits="userSpaceOnUse">
+        			<stop offset="50%" stop-color="#0b0" />
+        			<stop offset="75%" stop-color="forestgreen" />
+        			<stop offset="100%" stop-color="darkgreen" />
+        		</radialGradient>
+        	</defs>
+        	<circle cx="50" cy="50" r="50" fill="url(#grassGrad1)" />
+        	<circle cx="50" cy="50" r="30" fill="none" stroke="url(#grassGrad2)" stroke-width="13" />
+        	<circle cx="50" cy="50" r="17.5" fill="none" stroke="url(#grassGrad3)" stroke-width="13" />
+        	<circle cx="50" cy="50" r="42.5" fill="none" stroke="#666" stroke-width="7.5" filter="url(#blur2)" />
+        	<use href="#trackSec" stroke="tan" stroke-width="10" stroke-dasharray="2.22511833333" stroke-dashoffset="1.11255916667" />
+        	<circle cx="50" cy="50" r="45" fill="none" stroke="lightgray" />
+        	<circle cx="50" cy="50" r="40" fill="none" stroke="lightgray" />
+        	<g id="boxCar1">
+        		<rect height="8" width="14" x="-7" y="-4" rx="1" fill="rgb(255, 107, 50)" />
+        		<rect height="5" width="10" x="-5" y="-2.5" rx="0.6" fill="rgba(0,0,0,0.2)" />
+        		<animateMotion id="secBox1" dur="60s" begin="${((secondsInMinute - 3.5) * -1) - 60}s" repeatCount="indefinite" rotate="auto-reverse">
+        			<mpath href="#trackSec" />
+        		</animateMotion>
+        	</g>
+        	<g id="boxCar2">
+        		<rect height="8" width="14" x="-7" y="-4" rx="1" fill="rgb(255, 122, 50)" />
+        		<rect height="5" width="10" x="-5" y="-2.5" rx="0.6" fill="rgba(0,0,0,0.2)" />
+        		<animateMotion id="secBox2" dur="60s" begin="${((secondsInMinute - 6.9) * -1) - 60}s" repeatCount="indefinite" rotate="auto-reverse">
+        			<mpath href="#trackSec" />
+        		</animateMotion>
+        	</g>
+        	<g id="boxCar3">
+        		<rect height="8" width="14" x="-7" y="-4" rx="1" fill="rgb(255, 136, 50)" />
+        		<rect height="5" width="10" x="-5" y="-2.5" rx="0.6" fill="rgba(0,0,0,0.2)" />
+        		<animateMotion id="secBox3" dur="60s" begin="${((secondsInMinute - 10.3) * -1) - 60}s" repeatCount="indefinite" rotate="auto-reverse">
+        			<mpath href="#trackSec" />
+        		</animateMotion>
+        	</g>
+        	<g id="railCar">
+        		<ellipse id="fwS" cx="-5" rx="3" ry="4.5" fill="#666" />
+        		<circle id="csS" r="4" cx="-5" fill="rgb(255, 50, 66)" />
+        		<rect height="8" width="14" x="-7" y="-4" rx="1" fill="rgb(255, 50, 66)" />
+        		<rect height="7" width="14" x="-7" y="-3.5" rx="1" fill="rgb(255, 239, 50)" />
+        		<circle id="d1S" r="0.8" cx="-3" fill="#666" />
+        		<circle id="d2S" r="0.8" cx="-0.5" fill="#666" />
+        		<rect height="9.5" width="7.5" x="0" y="-4.75" rx="1" fill="rgb(255, 50, 66)" />
+        		<circle id="ss1S" r="2.5" cx="-5.5" fill="darkgrey" />
+        		<circle id="ss2S" r="1.5" cx="-5.5" fill="#555" />
+        		<g filter="url(#blur)">
+        			<circle id="puff1S" r="1.5" cx="-5.5" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="0s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="0s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-8; 15" dur="5s" begin="0s" repeatCount="indefinite" />
+        			</circle>
+        			<circle id="puff2S" r="1.5" cx="-5" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="-1s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="-1s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-8; 15" dur="5s" begin="-1s" repeatCount="indefinite" />
+        			</circle>
+        			<circle id="puff3S" r="1.5" cx="-5" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="-2s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="-2s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-8; 15" dur="5s" begin="-2s" repeatCount="indefinite" />
+        			</circle>
+        			<circle id="puff4S" r="1.5" cx="-5" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="-3s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="-3s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-8; 15" dur="5s" begin="-3s" repeatCount="indefinite" />
+        			</circle>
+        			<circle id="puff5S" r="1.5" cx="-5" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="-4s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="-4s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-8; 15" dur="5s" begin="-4s" repeatCount="indefinite" />
+        			</circle>
+        		</g>
+        		<animateMotion id="secEngine" dur="60s" begin="-${secondsInMinute}s" repeatCount="indefinite" rotate="auto-reverse">
+        			<mpath href="#trackSec" />
+        		</animateMotion>
+        	</g>
+        	<circle cx="50" cy="50" r="30" fill="none" stroke="#666" stroke-width="7.5" filter="url(#blur2)" />
+        	<use href="#trackMin" stroke="tan" stroke-width="10" stroke-dasharray="3.142035" stroke-dashoffset="1.5710175" />
+        	<circle cx="50" cy="50" r="32.5" fill="none" stroke="lightgray" />
+        	<circle cx="50" cy="50" r="27.5" fill="none" stroke="lightgray" />
+        	<g id="boxCar1M">
+        		<rect height="8" width="14" x="-7" y="-4" rx="1" fill="rgb(255, 107, 50)" />
+        		<rect height="5" width="10" x="-5" y="-2.5" rx="0.6" fill="rgba(0,0,0,0.2)" />
+        		<animateMotion id="minBox1" dur="3600s" begin="${((secondsInHour - 310) * -1) - 3600}s" repeatCount="indefinite" rotate="auto-reverse">
+        			<mpath href="#trackMin" />
+        		</animateMotion>
+        	</g>
+        	<g id="boxCar2M">
+        		<rect height="8" width="14" x="-7" y="-4" rx="1" fill="rgb(255, 122, 50)" />
+        		<rect height="5" width="10" x="-5" y="-2.5" rx="0.6" fill="rgba(0,0,0,0.2)" />
+        		<animateMotion id="minBox2" dur="3600s" begin="${((secondsInHour - 610) * -1) - 3600}s" repeatCount="indefinite" rotate="auto-reverse">
+        			<mpath href="#trackMin" />
+        		</animateMotion>
+        	</g>
+        	<g id="railCarM">
+        		<ellipse id="fwM" cx="-5" rx="3" ry="4.5" fill="#666" />
+        		<circle id="csM" r="4" cx="-5" fill="rgb(255, 50, 66)" />
+        		<rect height="8" width="14" x="-7" y="-4" rx="1" fill="rgb(255, 50, 66)" />
+        		<rect height="7" width="14" x="-7" y="-3.5" rx="1" fill="rgb(50, 220, 255)" />
+        		<circle id="d1M" r="0.8" cx="-3" fill="#666" />
+        		<circle id="d2M" r="0.8" cx="-0.5" fill="#666" />
+        		<rect height="9.5" width="7.5" x="0" y="-4.75" rx="1" fill="rgb(255, 50, 66)" />
+        		<circle id="ss1M" r="2.5" cx="-5.5" fill="darkgrey" />
+        		<circle id="ss2M" r="1.5" cx="-5.5" fill="#555" />
+        		<g filter="url(#blur)">
+        			<circle id="puff1S" r="1.5" cx="-5.5" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="0s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="0s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-7; 10" dur="5s" begin="0s" repeatCount="indefinite" />
+        			</circle>
+        			<circle id="puff2S" r="1.5" cx="-5" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="-1s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="-1s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-7; 10" dur="5s" begin="-1s" repeatCount="indefinite" />
+        			</circle>
+        			<circle id="puff3S" r="1.5" cx="-5" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="-2s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="-2s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-7; 10" dur="5s" begin="-2s" repeatCount="indefinite" />
+        			</circle>
+        			<circle id="puff4S" r="1.5" cx="-5" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="-3s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="-3s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-7; 10" dur="5s" begin="-3s" repeatCount="indefinite" />
+        			</circle>
+        			<circle id="puff5S" r="1.5" cx="-5" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="-4s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="-4s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-7; 10" dur="5s" begin="-4s" repeatCount="indefinite" />
+        			</circle>
+        		</g>
+        		<animateMotion id="minEngine" dur="3600s" begin="-${secondsInHour}s" repeatCount="indefinite" rotate="auto-reverse">
+        			<mpath href="#trackMin" />
+        		</animateMotion>
+        	</g>
+        
+        	<circle cx="50" cy="50" r="17.5" fill="none" stroke="#666" stroke-width="7.5" filter="url(#blur2)" />
+        	<use href="#trackHour" stroke="tan" stroke-width="10" stroke-dasharray="4.5821375" stroke-dashoffset="2.29106875" />
+        	<circle cx="50" cy="50" r="15" fill="none" stroke="lightgray" />
+        	<circle cx="50" cy="50" r="20" fill="none" stroke="lightgray" />
+        	<g id="boxCar1H">
+        		<rect height="8" width="14" x="-7" y="-4" rx="1" fill="rgb(255, 107, 50)" />
+        		<rect height="5" width="10" x="-5" y="-2.5" rx="0.6" fill="rgba(0,0,0,0.2)" />
+        		<animateMotion id="hrBox1" dur="43200s" begin="${((secondsInDay - 6500) * -1) - 43200}s" repeatCount="indefinite" rotate="auto-reverse">
+        			<mpath href="#trackHour" />
+        		</animateMotion>
+        	</g>
+        	<g id="railCarH">
+        		<ellipse id="fwH" cx="-5" rx="3" ry="4.5" fill="#666" />
+        		<circle id="csH" r="4" cx="-5" fill="rgb(255, 50, 66)" />
+        		<rect height="8" width="14" x="-7" y="-4" rx="1" fill="rgb(255, 50, 66)" />
+        		<rect height="7" width="14" x="-7" y="-3.5" rx="1" fill="rgb(74, 255, 50)" />
+        		<circle id="d1H" r="0.8" cx="-3" fill="#666" />
+        		<circle id="d2H" r="0.8" cx="-0.5" fill="#666" />
+        		<rect height="9.5" width="7.5" x="0" y="-4.75" rx="1" fill="rgb(255, 50, 66)" />
+        		<circle id="ss1H" r="2.5" cx="-5.5" fill="darkgrey" />
+        		<circle id="ss2H" r="1.5" cx="-5.5" fill="#555" />
+        		<g filter="url(#blur)">
+        			<circle id="puff1H" r="1.5" cx="-7" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="0s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="0s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-7; 7" dur="5s" begin="0s" repeatCount="indefinite" />
+        			</circle>
+        			<circle id="puff3H" r="1.5" cx="-7" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="-2s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="-2s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-7; 7" dur="5s" begin="-2s" repeatCount="indefinite" />
+        			</circle>
+        			<circle id="puff5H" r="1.5" cx="-7" cy="-1" fill="#fff">
+        				<animate attributeName="r" values="0; 4; 2" dur="5s" begin="-4s" repeatCount="indefinite" />
+        				<animate attributeName="opacity" values="1; 0.8; 0" dur="5s" begin="-4s" repeatCount="indefinite" />
+        				<animate attributeName="cx" values="-7; 7" dur="5s" begin="-4s" repeatCount="indefinite" />
+        			</circle>
+        		</g>
+        		<animateMotion id="hrEngine" dur="43200s" begin="-${secondsInDay}s" repeatCount="indefinite" rotate="auto-reverse">
+        			<mpath href="#trackHour" />
+        		</animateMotion>
+        	</g>
+        </svg>`;
+        	
+        	const wrapper = document.createElement("div");
+        	wrapper.insertAdjacentHTML('afterbegin', svg);
+        	const doc = wrapper.firstChild;
+        	document.getElementById('trainClockArea').appendChild(doc);
+        }
+        
+        createTrainClock();
+        
+        // refresh it if we leave the page
+        document.addEventListener("visibilitychange", () => {
+          if (!document.hidden) {
+        		document.getElementById('trainClockArea').replaceChildren();
+            createTrainClock();
+          }
+        });
+    </script>
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script>
+        kofiWidgetOverlay.draw('leimapapa', {
+      		'type': 'floating-chat',
+      		'floating-chat.donateButton.text': 'Support me',
+      		'floating-chat.donateButton.background-color': 'rgba(255, 255, 255, 0.1)',
+      		'floating-chat.donateButton.text-color': '#fff'
+      	});
+	  </script>
+    <script type="module">
+	  import { createNavbar } from 'https://leimolabs.com/navbar.js';
+	
+	  document.addEventListener('DOMContentLoaded', () => {
+	    createNavbar({ opacity: '0.8' });
+	  });
+    </script>
+</body>
+</html>
